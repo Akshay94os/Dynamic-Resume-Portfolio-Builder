@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ resume.name }} - Resume</title><style>body{font-family:Georgia,serif;padding:3rem;background:#fff;color:#111;max-width:700px;margin:auto;}h1{margin:0;color:#0f172a;}h2{border-bottom:1px solid #ccc;padding-bottom:4px;margin-top:1.5rem;font-size:1.1rem;}.tag{display:inline-block;background:#eee;padding:2px 8px;margin:2px;border-radius:4px;font-family:sans-serif;font-size:0.85rem;}</style></head>
+<body>
+  <h1>{{ resume.name }}</h1>
+  <p><b>{{ resume.title }}</b> | {{ resume.email }} | {{ resume.phone }}</p>
+  <h2>Summary</h2>
+  <p>{{ resume.summary }}</p>
+  <h2>Skills</h2>
+  <div>{% for s in skills %}<span class="tag">{{ s }}</span>{% endfor %}</div>
+  <h2>Experience</h2>
+  <p style="white-space:pre-line;">{{ resume.experience }}</p>
+</body>
+</html>
