@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download Django Advanced Projects (Pack 2)</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: #090d16; color: #f1f5f9; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    h1 { color: #38bdf8; margin-bottom: 0.5rem; font-size: 2rem; }
+    p.sub { color: #94a3b8; margin-bottom: 2.5rem; text-align: center; max-width: 600px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; width: 100%; max-width: 1050px; }
+    .card { background: #131c2e; border: 1px solid #1e293b; border-radius: 12px; padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .tag { align-self: flex-start; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 8px; border-radius: 4px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; margin-bottom: 0.75rem; }
+    .card h2 { font-size: 1.3rem; margin-bottom: 0.5rem; color: #fff; }
+    .card p { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    .btn { background: #0284c7; color: white; border: none; padding: 0.8rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s ease; }
+    .btn:hover { background: #0369a1; }
+  </style>
+</head>
+<body>
+
+  <h1>Django Project Pack 2 (.ZIP)</h1>
+  <p class="sub">Production-structured Django codebases with database models, session management, and dynamic HTML templates.</p>
+
+  <div class="grid">
+    <!-- Project 4 -->
+    <div class="card">
+      <div>
+        <span class="tag">Support & Helpdesk</span>
+        <h2>04. Helpdesk Support Ticket Engine</h2>
+        <p>Ticketing portal allowing users to lodge support requests with priority tags, status updates (Open, Resolved), and staff message threads.</p>
+      </div>
+      <button class="btn" onclick="downloadDjangoProject4()">⬇ Download Django Project 4 (.ZIP)</button>
+    </div>
+
+    <!-- Project 5 -->
+    <div class="card">
+      <div>
+        <span class="tag">Sessions & Commerce</span>
+        <h2>05. Store Catalog & Cart Engine</h2>
+        <p>E-commerce product catalog with session-based persistent shopping carts, quantity adjusters, and live subtotal calculations.</p>
+      </div>
+      <button class="btn" onclick="downloadDjangoProject5()">⬇ Download Django Project 5 (.ZIP)</button>
+    </div>
+
+    <!-- Project 6 -->
+    <div class="card">
+      <div>
+        <span class="tag">Profile & Document Generation</span>
+        <h2>06. Dynamic Resume & Portfolio Builder</h2>
+        <p>Profile portfolio generator where users input experience, education, and skills to generate a clean, printable live resume preview.</p>
+      </div>
+      <button class="btn" onclick="downloadDjangoProject6()">⬇ Download Django Project 6 (.ZIP)</button>
+    </div>
+  </div>
+
+  <script>
+    async function triggerDownload(zip, filename) {
+      const blob = await zip.generateAsync({ type: "blob" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    const baseManagePy = (projName) => `#!/usr/bin/env python
+import os
+import sys
+
+def main():
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '${projName}.settings')
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            "Couldn't import Django. Are you sure it's installed and available on your PYTHONPATH environment variable?"
+        ) from exc
+    execute_from_command_line(sys.argv)
+
+if __name__ == '__main__':
+    main()
+`;
+
+    const baseSettings = (appName, projName) => `from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = 'django-insecure-prod-key-for-local'
+DEBUG = True
+ALLOWED_HOSTS = ['*']
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    '${appName}',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = '${projName}.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = '${projName}.wsgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+STATIC_URL = 'static/'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+`;
+
+    // --- Project 4: Helpdesk Tickets ---
+    function downloadDjangoProject4() {
+      const zip = new JSZip();
+
+      zip.file("manage.py", baseManagePy("helpdesk_hub"));
+      zip.file("requirements.txt", "django>=4.2\n");
+      zip.file("README.md", "# Helpdesk Support Engine\n\nRun:\n```bash\npip install -r requirements.txt\npython manage.py migrate\npython manage.py runserver\n```\n");
+
+      zip.file("helpdesk_hub/__init__.py", "");
+      zip.file("helpdesk_hub/settings.py", baseSettings("tickets", "helpdesk_hub"));
+      zip.file("helpdesk_hub/urls.py", `from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('tickets.urls')),
+]
+`);
+      zip.file("helpdesk_hub/wsgi.py", `import os
+from django.core.wsgi import get_wsgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'helpdesk_hub.settings')
+application = get_wsgi_application()
+`);
+
+      zip.file("tickets/__init__.py", "");
+      zip.file("tickets/models.py", `from django.db import models
+
+class Ticket(models.Model):
+    title = models.CharField(max_length=150)
+    email = models.EmailField()
+    priority = models.CharField(max_length=20, choices=[('LOW','Low'), ('MED','Medium'), ('HIGH','High')], default='MED')
+    status = models.CharField(max_length=20, choices=[('OPEN','Open'), ('RESOLVED','Resolved')], default='OPEN')
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"[{self.priority}] {self.title}"
+`);
+      zip.file("tickets/views.py", `from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ticket
+
+def list_tickets(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        email = request.POST.get('email')
+        priority = request.POST.get('priority')
+        desc = request.POST.get('description')
+        Ticket.objects.create(title=title, email=email, priority=priority, description=desc)
+        return redirect('ticket_list')
+
+    tickets = Ticket.objects.order_by('-created_at')
+    return render(request, 'tickets/index.html', {'tickets': tickets})
+
+def toggle_status(request, pk):
+    ticket = get_object_or_404(Ticket, id=pk)
+    ticket.status = 'RESOLVED' if ticket.status == 'OPEN' else 'OPEN'
+    ticket.save()
+    return redirect('ticket_list')
+`);
+      zip.file("tickets/urls.py", `from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.list_tickets, name='ticket_list'),
+    path('toggle/<int:pk>/', views.toggle_status, name='toggle_status'),
+]
+`);
+      zip.file("tickets/admin.py", `from django.contrib import admin
+from .models import Ticket
+admin.site.register(Ticket)
+`);
+
+      zip.file("templates/tickets/index.html", `<!DOCTYPE html>
+<html>
+<head><title>Helpdesk Hub</title><style>body{font-family:sans-serif;padding:2rem;background:#0f172a;color:#fff;}input,select,textarea{width:100%;margin-bottom:8px;padding:8px;background:#1e293b;border:1px solid #334155;color:#fff;}button{background:#0284c7;color:#fff;padding:8px 16px;border:none;cursor:pointer;}table{width:100%;border-collapse:collapse;margin-top:1.5rem;}th,td{padding:8px;border:1px solid #334155;}</style></head>
+<body>
+  <h1>Support Tickets</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <input name="title" placeholder="Issue Title" required>
+    <input name="email" type="email" placeholder="Contact Email" required>
+    <select name="priority"><option value="LOW">Low</option><option value="MED">Medium</option><option value="HIGH">High</option></select>
+    <textarea name="description" placeholder="Describe the error/problem..."></textarea>
+    <button type="submit">Submit Ticket</button>
+  </form>
+  <table>
+    <tr><th>ID</th><th>Title</th><th>Priority</th><th>Status</th><th>Action</th></tr>
+    {% for t in tickets %}
+    <tr><td>#{{ t.id }}</td><td>{{ t.title }}</td><td>{{ t.priority }}</td><td>{{ t.status }}</td><td><a href="/toggle/{{ t.id }}/" style="color:#38bdf8;">Toggle</a></td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>`);
+
+      triggerDownload(zip, "django_helpdesk_hub.zip");
+    }
+
+    // --- Project 5: Store & Cart ---
+    function downloadDjangoProject5() {
+      const zip = new JSZip();
+
+      zip.file("manage.py", baseManagePy("shop_project"));
+      zip.file("requirements.txt", "django>=4.2\n");
+      zip.file("README.md", "# Mini E-Commerce Cart\n\nRun:\n```bash\npip install -r requirements.txt\npython manage.py migrate\npython manage.py runserver\n```\n");
+
+      zip.file("shop_project/__init__.py", "");
+      zip.file("shop_project/settings.py", baseSettings("store", "shop_project"));
+      zip.file("shop_project/urls.py", `from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('store.urls')),
+]
+`);
+      zip.file("shop_project/wsgi.py", `import os
+from django.core.wsgi import get_wsgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shop_project.settings')
+application = get_wsgi_application()
+`);
+
+      zip.file("store/__init__.py", "");
+      zip.file("store/models.py", `from django.db import models
+
+class Product(models.Model):
+    name = models.CharField(max_length=120)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    stock = models.IntegerField(default=10)
+
+    def __str__(self):
+        return f"{self.name} - ${self.price}"
+`);
+      zip.file("store/views.py", `from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product
+
+def product_list(request):
+    if Product.objects.count() == 0:
+        Product.objects.create(name="Mechanical Keyboard", price=89.99, stock=15)
+        Product.objects.create(name="Wireless Gaming Mouse", price=49.99, stock=25)
+        Product.objects.create(name="USB-C Monitor Hub", price=34.50, stock=30)
+    
+    products = Product.objects.all()
+    cart = request.session.get('cart', {})
+    cart_count = sum(cart.values())
+    return render(request, 'store/index.html', {'products': products, 'cart_count': cart_count})
+
+def add_to_cart(request, product_id):
+    cart = request.session.get('cart', {})
+    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+    request.session['cart'] = cart
+    return redirect('product_list')
+
+def view_cart(request):
+    cart = request.session.get('cart', {})
+    items = []
+    total = 0
+    for pid, qty in cart.items():
+        prod = Product.objects.get(id=pid)
+        subtotal = float(prod.price) * qty
+        total += subtotal
+        items.append({'product': prod, 'qty': qty, 'subtotal': subtotal})
+    return render(request, 'store/cart.html', {'items': items, 'total': total})
+
+def clear_cart(request):
+    request.session['cart'] = {}
+    return redirect('product_list')
+`);
+      zip.file("store/urls.py", `from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.product_list, name='product_list'),
+    path('add/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/', views.view_cart, name='view_cart'),
+    path('clear/', views.clear_cart, name='clear_cart'),
+]
+`);
+      zip.file("store/admin.py", `from django.contrib import admin
+from .models import Product
+admin.site.register(Product)
+`);
+
+      zip.file("templates/store/index.html", `<!DOCTYPE html>
+<html>
+<head><title>Store Catalog</title><style>body{font-family:sans-serif;padding:2rem;background:#0f172a;color:#fff;}a{color:#38bdf8;}.card{background:#1e293b;padding:1rem;margin:10px 0;border-radius:6px;display:flex;justify-content:space-between;align-items:center;}button{background:#10b981;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;}</style></head>
+<body>
+  <h1>Product Inventory | <a href="/cart/">Cart ({{ cart_count }})</a></h1>
+  {% for p in products %}
+    <div class="card">
+      <div><b>{{ p.name }}</b> - \${{ p.price }}</div>
+      <a href="/add/{{ p.id }}/"><button>Add to Cart</button></a>
+    </div>
+  {% endfor %}
+</body>
+</html>`);
+
+      zip.file("templates/store/cart.html", `<!DOCTYPE html>
+<html>
+<head><title>Shopping Cart</title><style>body{font-family:sans-serif;padding:2rem;background:#0f172a;color:#fff;}a{color:#38bdf8;}</style></head>
+<body>
+  <h1>Your Cart</h1>
+  <ul>
+    {% for item in items %}
+      <li>{{ item.product.name }} &times; {{ item.qty }} = \${{ item.subtotal }}</li>
+    {% empty %}
+      <li>Your cart is empty.</li>
+    {% endfor %}
+  </ul>
+  <h3>Total: \${{ total }}</h3>
+  <a href="/">Continue Shopping</a> | <a href="/clear/">Clear Cart</a>
+</body>
+</html>`);
+
+      triggerDownload(zip, "django_store_cart.zip");
+    }
+
+    // --- Project 6: Resume Builder ---
+    function downloadDjangoProject6() {
+      const zip = new JSZip();
+
+      zip.file("manage.py", baseManagePy("cv_builder"));
+      zip.file("requirements.txt", "django>=4.2\n");
+      zip.file("README.md", "# Dynamic Resume Builder\n\nRun:\n```bash\npip install -r requirements.txt\npython manage.py migrate\npython manage.py runserver\n```\n");
+
+      zip.file("cv_builder/__init__.py", "");
+      zip.file("cv_builder/settings.py", baseSettings("resumes", "cv_builder"));
+      zip.file("cv_builder/urls.py", `from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('resumes.urls')),
+]
+`);
+      zip.file("cv_builder/wsgi.py", `import os
+from django.core.wsgi import get_wsgi_application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cv_builder.settings')
+application = get_wsgi_application()
+`);
+
+      zip.file("resumes/__init__.py", "");
+      zip.file("resumes/models.py", `from django.db import models
+
+class Resume(models.Model):
+    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    summary = models.TextField()
+    skills = models.CharField(max_length=300)
+    experience = models.TextField()
+
+    def __str__(self):
+        return f"{self.name} - {self.title}"
+`);
+      zip.file("resumes/views.py", `from django.shortcuts import render, redirect, get_object_or_404
+from .models import Resume
+
+def create_resume(request):
+    if request.method == 'POST':
+        resume = Resume.objects.create(
+            name=request.POST.get('name'),
+            title=request.POST.get('title'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            summary=request.POST.get('summary'),
+            skills=request.POST.get('skills'),
+            experience=request.POST.get('experience'),
+        )
+        return redirect('preview_resume', pk=resume.id)
+    return render(request, 'resumes/create.html')
+
+def preview_resume(request, pk):
+    resume = get_object_or_404(Resume, id=pk)
+    skills_list = [s.strip() for s in resume.skills.split(',')]
+    return render(request, 'resumes/preview.html', {'resume': resume, 'skills': skills_list})
+`);
+      zip.file("resumes/urls.py", `from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.create_resume, name='create_resume'),
+    path('preview/<int:pk>/', views.preview_resume, name='preview_resume'),
+]
+`);
+      zip.file("resumes/admin.py", `from django.contrib import admin
+from .models import Resume
+admin.site.register(Resume)
+`);
+
+      zip.file("templates/resumes/create.html", `<!DOCTYPE html>
+<html>
+<head><title>Build Resume</title><style>body{font-family:sans-serif;padding:2rem;background:#0f172a;color:#fff;}input,textarea{width:100%;margin-bottom:8px;padding:8px;background:#1e293b;border:1px solid #334155;color:#fff;}button{background:#0284c7;color:#fff;padding:10px 20px;border:none;cursor:pointer;}</style></head>
+<body>
+  <h1>Resume Generator</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <input name="name" placeholder="Full Name" required>
+    <input name="title" placeholder="Professional Title (e.g. Software Engineer)" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="phone" placeholder="Phone Number" required>
+    <textarea name="summary" placeholder="Professional Bio/Summary"></textarea>
+    <input name="skills" placeholder="Skills (comma separated: Python, Django, Docker)">
+    <textarea name="experience" placeholder="Work History & Experience Details"></textarea>
+    <button type="submit">Generate Resume</button>
+  </form>
+</body>
+</html>`);
+
+      zip.file("templates/resumes/preview.html", `<!DOCTYPE html>
+<html>
+<head><title>{{ resume.name }} - Resume</title><style>body{font-family:Georgia,serif;padding:3rem;background:#fff;color:#111;max-width:700px;margin:auto;}h1{margin:0;color:#0f172a;}h2{border-bottom:1px solid #ccc;padding-bottom:4px;margin-top:1.5rem;font-size:1.1rem;}.tag{display:inline-block;background:#eee;padding:2px 8px;margin:2px;border-radius:4px;font-family:sans-serif;font-size:0.85rem;}</style></head>
+<body>
+  <h1>{{ resume.name }}</h1>
+  <p><b>{{ resume.title }}</b> | {{ resume.email }} | {{ resume.phone }}</p>
+  <h2>Summary</h2>
+  <p>{{ resume.summary }}</p>
+  <h2>Skills</h2>
+  <div>{% for s in skills %}<span class="tag">{{ s }}</span>{% endfor %}</div>
+  <h2>Experience</h2>
+  <p style="white-space:pre-line;">{{ resume.experience }}</p>
+</body>
+</html>`);
+
+      triggerDownload(zip, "django_resume_builder.zip");
+    }
+  </script>
+</body>
+</html>
